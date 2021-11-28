@@ -1,0 +1,9 @@
+[package]
+name = "gbalib_test"
+version = "0.0.1"
+authors = ["Litchi Pi <litchi.pi@protonmail.com>"]
+edition = "2018"
+description = "Testing the GBA lib with a dump project"
+
+[dependencies]
+rustygba = "0.0.1"
