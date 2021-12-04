@@ -2,6 +2,9 @@
 
 set -e
 
+clear
+cargo +nightly check --target="thumbv4t-none-eabi"
+
 function get_game_version {
 	python3 -c "print ((int('$1'.split('.')[0])*10) + (int('$1'.split('.')[1])*4) + (int('$1'.split('.')[2])*1))"
 }
