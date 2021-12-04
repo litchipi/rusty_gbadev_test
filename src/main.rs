@@ -13,7 +13,10 @@ pub struct Game {
 
 impl Game {
     pub fn new() -> Game {
-        Game { screencolor: colors::RED, nframe: 0 }
+        Game {
+            screencolor: colors::RED,
+            nframe: 0,
+        }
     }
 }
 
@@ -34,11 +37,17 @@ fn gameloop(sys: &mut System) {
     sys.graphics.fill_screen(sys.game.screencolor);
 }
 
-fn vblank_handler(sys: &mut System) {}
-fn hblank_handler(sys: &mut System) {}
-fn vcount_handler(sys: &mut System) {}
-fn timer0_handler(sys: &mut System) {}
-fn timer1_handler(sys: &mut System) {}
+fn vblank_handler(_sys: &mut System) {}
+fn hblank_handler(_sys: &mut System) {}
+fn vcount_handler(_sys: &mut System) {}
+fn timer0_handler(_sys: &mut System) {}
+fn timer1_handler(_sys: &mut System) {}
 
-set_irq_functions!(vblank_handler, hblank_handler, vcount_handler, timer0_handler, timer1_handler);
+set_irq_functions!(
+    vblank_handler,
+    hblank_handler,
+    vcount_handler,
+    timer0_handler,
+    timer1_handler
+);
 gba_game!(setup, gameloop, Game);
