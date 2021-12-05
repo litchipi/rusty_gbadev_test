@@ -26,11 +26,10 @@ impl Game {
 }
 
 fn setup() -> System {
-    info!("SETUP FUNCTION");
     let display_conf = GraphicsConfiguration::default();
     let irq_conf = IrqConfiguration::default();
     let mut sys = GbaSystem::new(Game::new(), display_conf, irq_conf);
-    sys.irq.set_timer_raw(0, 50, 2);
+    sys.irq.set_timer_raw(0, 80, 1);
     sys.irq.set_irq(Irq::HBlank);
     sys.irq.enable_selected_irq();
 
