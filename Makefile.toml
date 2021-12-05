@@ -1,0 +1,64 @@
+[env]
+GAMEVERSION=1
+MAKERCODE="42"
+GAMECODE="666"
+
+LZ77_COMPRESSION_REPO="https://github.com/litchipi/gba-lz77"
+
+[tasks.reset]
+command = "rm"
+args = ["-r", "build/", "target/"]
+dependencies = ["clean"]
+
+[tasks.assets]
+script = [
+    "mkdir -p ./build/ ./assets/",
+    "cd ./assets/",
+    "for asset in $(find . -type f) ; do",
+    "echo \"\nCompressing $asset\"",
+    "mkdir -p ../build/$(dirname $asset)",
+    "../tools/lz77-compress $asset ../build/$asset",
+    "done"
+]
+dependencies = ["build_asset_compressor"]
+
+[tasks.build]
+command = "cargo"
+args = ["+nightly", "build", "--target=thumbv4t-none-eabi", "--release"]
+dependencies = ["clean", "assets"]
+
+[tasks.test]
+command = "cargo"
+args = ["+nightly", "test", "--target=thumbv4t-none-eabi"]
+
+[tasks.create_rom]
+#install_crate = "gbafix"
+script = [
+"arm-none-eabi-objcopy -g --verbose -O binary target/thumbv4t-none-eabi/release/${CARGO_MAKE_CRATE_NAME} ./${CARGO_MAKE_CRATE_NAME}.gba",
+"gbafix --verbose -c${GAMECODE} -m${MAKERCODE} -r${GAMEVERSION} -p ${CARGO_MAKE_CRATE_NAME}.gba",
+]
+dependencies = ["build"]
+
+[tasks.run]
+command = "mgba"
+args = ["-l 15", "gbalib_test.gba"]
+dependencies = ["create_rom"]
+
+[tasks.clean]
+command = "rm"
+args = ["-f", "${CARGO_MAKE_CRATE_NAME}.gba", "${CARGO_MAKE_CRATE_NAME}.sav"]
+
+[tasks.build_asset_compressor]
+script = [
+"mkdir -p tools/",
+"if [ ! -f tools/lz77-compress ] || [ ! -f tools/lz77-decompress ] ; then",
+"echo \"Building the LZ77 assets compressor\"",
+"rm -rf build/lz77/",
+"git clone ${LZ77_COMPRESSION_REPO} build/lz77/",
+"cd build/lz77",
+"CCFLAGS=\"-lstdc++ -std=c++14 -Wall -Wextra -Wpedantic\"",
+"g++ $CCFLAGS decompress.cpp io.cpp -o ../../tools/lz77-decompress",
+"g++ $CCFLAGS compress.cpp io.cpp -o ../../tools/lz77-compress",
+"cd ../../",
+"fi",
+]
