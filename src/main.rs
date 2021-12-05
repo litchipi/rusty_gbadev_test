@@ -24,6 +24,7 @@ impl Game {
 }
 
 fn setup() -> System {
+    info!("SETUP FUNCTION");
     let display_conf = GraphicsConfiguration::default();
     let irq_conf = IrqConfiguration::default();
     let mut sys = GbaSystem::new(Game::new(), display_conf, irq_conf);
