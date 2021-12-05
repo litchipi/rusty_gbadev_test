@@ -7,7 +7,7 @@ LZ77_COMPRESSION_REPO="https://github.com/litchipi/gba-lz77"
 
 [tasks.reset]
 command = "rm"
-args = ["-r", "build/", "target/"]
+args = ["-rf", "build/", "target/"]
 dependencies = ["clean"]
 
 [tasks.assets]
@@ -53,12 +53,12 @@ script = [
 "mkdir -p tools/",
 "if [ ! -f tools/lz77-compress ] || [ ! -f tools/lz77-decompress ] ; then",
 "echo \"Building the LZ77 assets compressor\"",
-"rm -rf build/lz77/",
 "git clone ${LZ77_COMPRESSION_REPO} build/lz77/",
 "cd build/lz77",
 "CCFLAGS=\"-lstdc++ -std=c++14 -Wall -Wextra -Wpedantic\"",
 "g++ $CCFLAGS decompress.cpp io.cpp -o ../../tools/lz77-decompress",
 "g++ $CCFLAGS compress.cpp io.cpp -o ../../tools/lz77-compress",
 "cd ../../",
+"rm -rf build/lz77/",
 "fi",
 ]

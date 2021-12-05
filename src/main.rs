@@ -39,21 +39,20 @@ fn gameloop(sys: &mut System) {
         sys.game.nframe = 0;
         sys.game.screencolor = Color(sys.game.screencolor.0.rotate_left(5));
         info!("{:?}", sys.game);
+        sys.graphics.fill_screen(sys.game.screencolor);
     } else {
         sys.game.nframe += 1;
     }
-    sys.graphics.fill_screen(sys.game.screencolor);
 }
 
 // WARNING
 //  Putting messages in interruptions WILL make the game crash
 fn vblank_handler(_sys: &mut System) {}
 fn hblank_handler(sys: &mut System) {
-    sys.game.nb_interrupts += 1;
 }
 fn vcount_handler(_sys: &mut System) {}
 fn timer0_handler(sys: &mut System) {
-    sys.game.nb_interrupts = 0;
+    sys.game.nb_interrupts += 1;
 }
 fn timer1_handler(_sys: &mut System) {}
 
