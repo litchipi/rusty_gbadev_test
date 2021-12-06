@@ -30,6 +30,7 @@ fn setup() -> System {
     let irq_conf = IrqConfiguration::default();
     let mut sys = GbaSystem::new(Game::new(), display_conf, irq_conf);
     sys.irq.set_timer_raw(0, 80, 1);
+    sys.irq.set_timer_secs(1, 10.0);
     sys.irq.set_irq(Irq::HBlank);
     sys.irq.enable_selected_irq();
 
@@ -56,7 +57,9 @@ fn vcount_handler(_sys: &mut System) {}
 fn timer0_handler(sys: &mut System) {
     sys.game.nb_interrupts += 1;
 }
-fn timer1_handler(_sys: &mut System) {}
+fn timer1_handler(_sys: &mut System) {
+    info!("Timer 1 Interrupt"); // Should not crash the game as long as we don't access &mut System
+}
 
 gba_game!(setup, gameloop, Game);
 set_irq_functions!(
