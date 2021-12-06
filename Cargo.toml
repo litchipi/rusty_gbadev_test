@@ -6,4 +6,4 @@ edition = "2018"
 description = "Testing the GBA lib with a dump project"
 
 [dependencies]
-rustygba = "0.0.1"
+rustygba = "0.0.2"

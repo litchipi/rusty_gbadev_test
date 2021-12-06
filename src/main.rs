@@ -4,8 +4,6 @@
 
 use rustygba::prelude::*;
 
-pub type System = GbaSystem<Game>;
-
 #[derive(Debug)]
 pub struct Game {
     screencolor: Color,
@@ -25,12 +23,12 @@ impl Game {
     }
 }
 
-fn setup() -> System {
+fn setup() -> GbaSystem<Game> {
     let display_conf = GraphicsConfiguration::default();
     let irq_conf = IrqConfiguration::default();
-    let mut sys = GbaSystem::new(Game::new(), display_conf, irq_conf);
+    let mut sys = GbaSystem::<Game>::new(Game::new(), display_conf, irq_conf);
     sys.irq.set_timer_raw(0, 80, 1);
-    sys.irq.set_timer_secs(1, 10.0);
+    sys.irq.set_timer_secs(1, 2.0);
     sys.irq.set_irq(Irq::HBlank);
     sys.irq.enable_selected_irq();
 
@@ -38,7 +36,7 @@ fn setup() -> System {
     sys
 }
 
-fn gameloop(sys: &mut System) {
+fn gameloop(sys: &mut GbaSystem<Game>) {
     if sys.game.nframe >= 60 {
         sys.game.nframe = 0;
         sys.game.screencolor = Color(sys.game.screencolor.0.rotate_left(5));
@@ -51,13 +49,13 @@ fn gameloop(sys: &mut System) {
 
 // WARNING
 //  Putting messages in interruptions WILL make the game crash
-fn vblank_handler(_sys: &mut System) {}
-fn hblank_handler(_sys: &mut System) {}
-fn vcount_handler(_sys: &mut System) {}
-fn timer0_handler(sys: &mut System) {
+fn vblank_handler(_sys: &mut GbaSystem<Game>) {}
+fn hblank_handler(_sys: &mut GbaSystem<Game>) {}
+fn vcount_handler(_sys: &mut GbaSystem<Game>) {}
+fn timer0_handler(sys: &mut GbaSystem<Game>) {
     sys.game.nb_interrupts += 1;
 }
-fn timer1_handler(_sys: &mut System) {}
+fn timer1_handler(_sys: &mut GbaSystem<Game>) {}
 
 gba_game!(setup, gameloop, Game);
 set_irq_functions!(

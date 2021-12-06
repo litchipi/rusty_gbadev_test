@@ -20,7 +20,9 @@ dependencies = [
 
 [[package]]
 name = "rustygba"
-version = "0.0.1"
+version = "0.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "71e5c9ec5fb9e634079df1c42f7c572e4081bbdff371d7264740f296b17a3a6e"
 dependencies = [
  "gba",
 ]
