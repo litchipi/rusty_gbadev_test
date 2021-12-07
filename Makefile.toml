@@ -22,22 +22,20 @@ script = [
 ]
 dependencies = ["build_asset_compressor"]
 
-[tasks.build]
-command = "cargo"
-args = ["+nightly", "build", "--target=thumbv4t-none-eabi", "--release"]
+[tasks.buildcode]
+script = ["cargo +nightly build --target=thumbv4t-none-eabi --release"]
 dependencies = ["clean", "assets"]
 
-[tasks.test]
+[tasks.testcode]
 command = "cargo"
 args = ["+nightly", "test", "--target=thumbv4t-none-eabi"]
 
 [tasks.create_rom]
-#install_crate = "gbafix"
 script = [
 "arm-none-eabi-objcopy -g --verbose -O binary target/thumbv4t-none-eabi/release/${CARGO_MAKE_CRATE_NAME} ./${CARGO_MAKE_CRATE_NAME}.gba",
 "gbafix --verbose -c${GAMECODE} -m${MAKERCODE} -r${GAMEVERSION} -p ${CARGO_MAKE_CRATE_NAME}.gba",
 ]
-dependencies = ["build"]
+dependencies = ["buildcode"]
 
 [tasks.run]
 command = "mgba"
